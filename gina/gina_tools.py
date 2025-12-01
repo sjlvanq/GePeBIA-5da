@@ -1,5 +1,5 @@
 """
-"""Persistence tools for Gina.
+Persistence tools for Gina.
 SQLite database handling for user profiles.
 """
 

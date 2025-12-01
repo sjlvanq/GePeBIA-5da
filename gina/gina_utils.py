@@ -1,5 +1,5 @@
 """
-"""Utilities for validation and data handling in Gina.
+Utilities for validation and data handling in Gina.
 """
 
 import logging

@@ -1,5 +1,5 @@
 """
-"""Structured communication protocol between Iris and Gina.
+Structured communication protocol between Iris and Gina.
 Defines data contracts to ensure consistent communication.
 """
 

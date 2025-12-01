@@ -1,5 +1,5 @@
 """
-"""Utilities for search, validation, and calculations in Alec.
+Utilities for search, validation, and calculations in Alec.
 """
 
 import datetime
