@@ -2,8 +2,6 @@
 
 ## 🌟 Project Overview: A Level 3 Collaborative Architecture
 
-
-
 This project implements the design principles of a **Level 3: Collaborative Multi-Agent System** [4, p. 17], which moves beyond a monolithic design toward a **"team of specialists"** working in concert [4, p. 17; 4, p. 16]. The system's robustness and scalability are achieved through a clear **division of labor** [4, p. 17].
 
 The architecture follows the **Core Agent Anatomy** [4, p. 19]: the reasoning Model (Brain), external Tools (Hands), and the Orchestration Layer [4, p. 19; 4, p. 20]:
@@ -54,6 +52,74 @@ Observability provides the essential technical foundation for judging the agent'
 
 *   **Memory Isolation:** The system utilizes **Memory** for long-term knowledge (user profiles) [3, p. 6], which is defined as being **highly isolated per-user** [3, p. 31] to prevent data leakage and ensure privacy [3, p. 69].
 *   **Human-in-the-Loop (HITL):** The **Golden Rule of Registration** in `Iris` enforces a mandatory confirmation step (`wait_for_user_confirmation`) before initiating a sensitive action like profile creation [203; 204]. This process integrates **Human-in-the-Loop (HITL) judgment** [1, p. 26; 1, p. 46] to anchor the system's safety and alignment with governance policies [1, p. 41].
+
+-----
+
+## Agent ports and run instructions
+
+This project contains multiple agents. Below are the default ports used during local testing and example commands to start each agent. Adjust ports and environment settings as needed for your setup.
+
+Default ports used in local tests
+- Alec (a2a agent): 8001
+- Gina (a2a agent): 8003
+- Iris (user-facing web agent / ADK web): uses the ADK web default (commonly 8000); in my tests I started it without explicitly passing a port.
+
+Notes:
+- Commands below assume you run them from the agent's folder (specified for each command).
+- The examples use a relative .env file located at the repository root (../.env from each agent folder). Update the path if your .env is elsewhere.
+- On Windows you may use the uvicorn.exe executable if installed; on other platforms use python -m uvicorn or uvicorn.
+
+Run commands (examples)
+
+1) Start Gina (from ./gina)
+```bash
+# from the project root:
+cd ./gina
+
+# Windows example
+uvicorn.exe --port 8003 --env-file ../.env --log-level=debug gina_a2a:a2a_app
+
+# Cross-platform alternative
+python -m uvicorn gina_a2a:a2a_app --port 8003 --env-file ../.env --log-level debug
+```
+
+2) Start Alec (from ./alec)
+```bash
+# from the project root:
+cd ./alec
+
+# Windows example
+uvicorn.exe --port 8001 --env-file ../.env --log-level=debug alec_a2a:a2a_app
+
+# Cross-platform alternative
+python -m uvicorn alec_a2a:a2a_app --port 8001 --env-file ../.env --log-level debug
+```
+
+3) Start Iris (user-facing web agent, from repository root)
+```bash
+# from the project root:
+# start the ADK web UI for Iris (debug logging)
+adk web --log_level=debug .
+
+# If you need to force a port for ADK web, consult ADK docs or
+# set the corresponding environment variable (for example ADK_PORT)
+# or pass the port flag if supported by your ADK version.
+```
+
+Quick test and verification
+- Open the web UI for Iris in your browser (usually http://localhost:8000 unless overridden).
+- Verify Alec and Gina are up:
+  - Visit http://localhost:8001/.well-known/agent-card.json and http://localhost:8003/.well-known/agent-card.json respectively.
+  - Check the terminal logs for startup messages and any registration/connection traces.
+- Example curl (replace path if your agent exposes different endpoints):
+```bash
+curl -v http://localhost:8001/.well-known/agent-card.json
+curl -v http://localhost:8003/.well-known/agent-card.json
+```
+
+- Environment file (.env): commands above use `--env-file ../.env` when starting from each agent folder. Ensure the .env file exists and contains required variables.
+- If uvicorn is not found, use `python -m uvicorn` or install uvicorn in the active environment: `pip install uvicorn`.
+- ADK web flags/overrides: ADK CLI options may vary by version. If you need to bind Iris to a specific port, check `adk --help` or ADK documentation for the exact flag or environment variable to set.
 
 ***
 
