@@ -2,6 +2,64 @@
 
 -----
 
+
+
+## 🚀 Installation and Setup
+
+### Prerequisites
+
+* **API Key:** A Google AI Studio API key is required. Get one at [https://aistudio.google.com](https://aistudio.google.com).
+* **Install Dependencies:** Install all necessary Python libraries using `pip`:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Configuration
+
+1.  **Configure API Key:** Open the `.env` file and replace the placeholder `YOUR-API-KEY` with your generated key from Google AI Studio.
+2.  **Language Settings:** To change the default language, modify the relevant setting within the `config.json` file.
+
+### Default Ports
+
+The following default ports are used for each service:
+
+* **Alec:** `8001` (Service: `alec_a2a:a2a_app`)
+* **Gina:** `8003` (Service: `gina_a2a:a2a_app`)
+
+## Running the Agents
+
+### Gina Agent (Port 8003)
+
+| Step | Command | Notes |
+| :--- | :--- | :--- |
+| **1. Change Directory** | `cd ./gina` | Navigate from the project root. |
+| **2. Run (Windows)** | `uvicorn.exe --port 8003 --env-file ../.env --log-level=debug gina_a2a:a2a_app` | Uses `uvicorn.exe` wrapper. |
+| **2. Run (Cross-platform)** | `python -m uvicorn gina_a2a:a2a_app --port 8003 --env-file ../.env --log-level debug` | Linux/macOS. |
+
+### Alec Agent (Port 8001)
+
+| Step | Command | Notes |
+| :--- | :--- | :--- |
+| **1. Change Directory** | `cd ./alec` | Navigate from the project root. |
+| **2. Run (Windows)** | `uvicorn.exe --port 8001 --env-file ../.env --log-level=debug alec_a2a:a2a_app` | Uses `uvicorn.exe` wrapper. |
+| **2. Run (Cross-platform)** | `python -m uvicorn alec_a2a:a2a_app --port 8001 --env-file ../.env --log-level debug` | Linux/macOS. |
+
+### Iris
+
+Once the Alec and Gina agents are running in their respective terminals, you can launch the Iris orchestrator:
+
+* **To run in web mode:**
+    ```bash
+    adk web --log_level=debug .
+    ```
+
+* **To run the 'iris' target directly:**
+    ```bash
+    adk run --log_level=debug iris
+    ```
+
+-----
+
 ## 🌟 Design Overview
 
 This project implements the design principles of a **Level 3: Collaborative Multi-Agent System** [4, p. 17] which moves beyond a monolithic design toward a **"team of specialists"** working in concert. The system's robustness and scalability are achieved through a clear **division of labor**.
@@ -63,62 +121,4 @@ Observability provides the essential technical foundation for judging the agent'
 3. Kimberly Milam and Antonio Gulli, *Context Engineering: Sessions, Memory* (Google, November 2025).
 4. Alan Blount, Antonio Gulli, Shubham Saboo, Michael Zimmermann, and Vladimir Vuskovic, *Introduction to Agents* (Google, November 2025).
 5. Sokratis Kartakis, Gabriela Hernandez Larios, Ran Li, Elia Secchi, and Huang Xia, *Prototype to Production* (Google, November 2025).
-
-
------
-
-
-## 🚀 Installation and Setup
-
-### Prerequisites
-
-* **API Key:** A Google AI Studio API key is required. Get one at [https://aistudio.google.com](https://aistudio.google.com).
-* **Install Dependencies:** Install all necessary Python libraries using `pip`:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-### Configuration
-
-1.  **Configure API Key:** Open the `.env` file and replace the placeholder `YOUR-API-KEY` with your generated key from Google AI Studio.
-2.  **Language Settings:** To change the default language, modify the relevant setting within the `config.json` file.
-
-### Default Ports
-
-The following default ports are used for each service:
-
-* **Alec:** `8001` (Service: `alec_a2a:a2a_app`)
-* **Gina:** `8003` (Service: `gina_a2a:a2a_app`)
-
-## Running the Agents
-
-### Gina Agent (Port 8003)
-
-| Step | Command | Notes |
-| :--- | :--- | :--- |
-| **1. Change Directory** | `cd ./gina` | Navigate from the project root. |
-| **2. Run (Windows)** | `uvicorn.exe --port 8003 --env-file ../.env --log-level=debug gina_a2a:a2a_app` | Uses `uvicorn.exe` wrapper. |
-| **2. Run (Cross-platform)** | `python -m uvicorn gina_a2a:a2a_app --port 8003 --env-file ../.env --log-level debug` | Linux/macOS. |
-
-### Alec Agent (Port 8001)
-
-| Step | Command | Notes |
-| :--- | :--- | :--- |
-| **1. Change Directory** | `cd ./alec` | Navigate from the project root. |
-| **2. Run (Windows)** | `uvicorn.exe --port 8001 --env-file ../.env --log-level=debug alec_a2a:a2a_app` | Uses `uvicorn.exe` wrapper. |
-| **2. Run (Cross-platform)** | `python -m uvicorn alec_a2a:a2a_app --port 8001 --env-file ../.env --log-level debug` | Linux/macOS. |
-
-### Iris
-
-Once the Alec and Gina agents are running in their respective terminals, you can launch the Iris orchestrator:
-
-* **To run in web mode:**
-    ```bash
-    adk web --log_level=debug .
-    ```
-
-* **To run the 'iris' target directly:**
-    ```bash
-    adk run --log_level=debug iris
-    ```
 
