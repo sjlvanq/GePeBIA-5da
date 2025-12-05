@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+from langcodes import Language
 from typing import Any, Dict
 
 from google.adk.agents import LlmAgent
@@ -24,6 +25,50 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger("iris")
+
+# ═══════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════
+
+def load_config():
+    config_file = os.getenv("IRIS_CONFIG_FILE", "config.json")
+    print(f"config_file for Iris: {config_file}")
+    try:
+        with open(config_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.warning("Config not found, using defaults")
+        return {"language": "en_US"}
+        
+CONFIG = load_config()
+
+def get_language_instruction(language_code: str) -> str:
+    """
+    Returns the complete language instruction for the given language code.
+    
+    Args:
+        language_code: Language code like 'en_US', 'en-US', 'en', etc.
+        
+    Returns:
+        Complete instruction string for the language
+    """
+    try:
+        lang = Language.get(language_code)
+        if lang.is_valid():
+            lang_display_name = lang.display_name()
+        else:
+            logger.warning(f"Invalid language code '{language_code}', falling back to English")
+            lang_display_name = "English"
+        return f"""
+LANGUAGE CONFIGURATION:
+- You MUST respond in {lang_display_name}
+"""
+    except:
+        logger.error(f"Error processing language code '{language_code}': {e}")
+        return f"""LANGUAGE CONFIGURATION:
+- You MUST respond in English
+"""
+        
 
 # ═══════════════════════════════════════════════════════════════════
 # RETRY CONFIGURATION FOR A2A COMMUNICATION
@@ -160,12 +205,13 @@ IRIS_TOOLS = [
 # SYSTEM INSTRUCTIONS
 # ═══════════════════════════════════════════════════════════════════
 
+IRIS_INSTRUCTION_LANGUAGE = get_language_instruction(CONFIG.get('language', 'en_US'))
 IRIS_INSTRUCTION = """
 You are Iris, a librarian agent at a small, community-focused neighborhood library.
-
+""" + IRIS_INSTRUCTION_LANGUAGE + """
 PERSONALITY:
 - Friendly, motivating, and warm
-- You use approachable language
+- You use approachable language}
 - You help readers discover books they will enjoy
 
 ═══════════════════════════════════════════════════════════════════
@@ -396,7 +442,9 @@ MANAGING THE CONVERSATION_ID:
    - If you lose it, the registration will fail
 
 PRESENTING PROMPTS:
-   - When you receive a "prompt" from Gina, show it DIRECTLY to the user
+   - When you receive a "prompt" from Gina:
+        1) If the message is in a language different from yours, provide the closest translation
+        2) Otherwise, show it DIRECTLY to the user
    - DO NOT add phrases like "Gina says:", "Gina is asking me:", "Got it. Gina..."
    - Treat the prompt as if it were your own question
    - CORRECT example: "What is your full name?"
