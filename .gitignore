@@ -1,7 +1,3 @@
-alec/__pycache__/
-gina/__pycache__/
-iris/__pycache__/
-
+**/__pycache__/
 gina/gina_users.db
-
-**/*.txt
+.env
