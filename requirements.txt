@@ -1,0 +1,6 @@
+# Pinned to the latest stable versions available on PyPI at 2025-12-03.
+
+google-genai[aiohttp]==1.53.0
+google-adk[a2a]==1.19.0
+langcodes==3.5.1
+language_data==1.4.0
